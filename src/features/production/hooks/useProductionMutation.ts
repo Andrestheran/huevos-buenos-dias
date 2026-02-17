@@ -31,7 +31,7 @@ export function useProductionMutation() {
       return await productionService.createRecord(record);
     },
 
-    onSuccess: (data, variables) => {
+    onSuccess: (data, _variables) => {
       // Invalidate queries to refetch
       queryClient.invalidateQueries({ queryKey: ['production-records'] });
 

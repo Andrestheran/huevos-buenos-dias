@@ -104,7 +104,7 @@ export const authService = {
    * Create user profile
    */
   async createProfile(profile: Omit<Profile, 'created_at' | 'updated_at'>) {
-    const { error } = await supabase.from('profiles').insert(profile);
+    const { error } = await supabase.from('profiles').insert(profile as any);
 
     if (error) throw error;
   },
@@ -115,7 +115,7 @@ export const authService = {
   async updateProfile(userId: string, updates: Partial<Profile>) {
     const { error } = await supabase
       .from('profiles')
-      .update(updates)
+      .update(updates as any)
       .eq('id', userId);
 
     if (error) throw error;

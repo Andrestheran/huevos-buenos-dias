@@ -11,7 +11,7 @@ export const productionService = {
   async createRecord(record: ProductionRecordCreate): Promise<ProductionRecord> {
     const { data, error } = await supabase
       .from('production_records')
-      .insert(record)
+      .insert(record as any)
       .select()
       .single();
 
@@ -91,7 +91,7 @@ export const productionService = {
     const { data, error } = await supabase.rpc('can_submit_today', {
       check_user_id: userId,
       check_barn: barn
-    });
+    } as any);
 
     if (error) throw error;
 
@@ -114,7 +114,7 @@ export const productionService = {
       end_date: endDate,
       filter_barn: filters?.barn || null,
       filter_user: filters?.userId || null
-    });
+    } as any);
 
     if (error) throw error;
 
@@ -159,7 +159,7 @@ export const productionService = {
   ): Promise<ProductionRecord> {
     const { data, error } = await supabase
       .from('production_records')
-      .update(updates)
+      .update(updates as any)
       .eq('id', recordId)
       .select()
       .single();

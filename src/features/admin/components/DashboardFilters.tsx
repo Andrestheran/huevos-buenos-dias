@@ -12,7 +12,7 @@ interface DashboardFiltersProps {
 }
 
 export function DashboardFilters({
-  dateRange,
+  dateRange: _dateRange,
   onDateRangeChange,
   selectedBarn,
   onBarnChange
