@@ -157,9 +157,9 @@ export const productionService = {
     recordId: string,
     updates: Partial<ProductionRecord>
   ): Promise<ProductionRecord> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase
       .from('production_records')
-      .update(updates as any)
+      .update as any)(updates)
       .eq('id', recordId)
       .select()
       .single();

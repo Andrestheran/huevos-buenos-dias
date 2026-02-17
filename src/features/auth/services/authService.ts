@@ -113,9 +113,9 @@ export const authService = {
    * Update user profile
    */
   async updateProfile(userId: string, updates: Partial<Profile>) {
-    const { error } = await supabase
+    const { error } = await (supabase
       .from('profiles')
-      .update(updates as any)
+      .update as any)(updates)
       .eq('id', userId);
 
     if (error) throw error;
