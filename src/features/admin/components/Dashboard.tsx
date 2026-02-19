@@ -193,6 +193,12 @@ export function Dashboard() {
                 <th className="pb-3 text-sm font-medium text-neutral-600 text-right">
                   JUMBO
                 </th>
+                <th className="pb-3 text-sm font-medium text-neutral-600 text-right">
+                  CONG.
+                </th>
+                <th className="pb-3 text-sm font-medium text-neutral-600 text-right">
+                  MORT.
+                </th>
                 <th className="pb-3 text-sm font-medium text-neutral-600 text-center">
                   Acciones
                 </th>
@@ -220,6 +226,8 @@ export function Dashboard() {
                   <td className="py-3 text-sm text-right">{formatNumber(record.b)}</td>
                   <td className="py-3 text-sm text-right">{formatNumber(record.extra)}</td>
                   <td className="py-3 text-sm text-right">{formatNumber(record.jumbo)}</td>
+                  <td className="py-3 text-sm text-right">{formatNumber(record.frozen)}</td>
+                  <td className="py-3 text-sm text-right">{formatNumber(record.mortality)}</td>
                   <td className="py-3 text-center">
                     <button
                       onClick={() => handleDeleteClick(record.id)}

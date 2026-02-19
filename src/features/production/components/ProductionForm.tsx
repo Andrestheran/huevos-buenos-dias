@@ -16,7 +16,9 @@ export function ProductionForm() {
     aa: 0,
     b: 0,
     extra: 0,
-    jumbo: 0
+    jumbo: 0,
+    frozen: 0,
+    mortality: 0
   });
 
   const [error, setError] = useState('');
@@ -61,6 +63,8 @@ export function ProductionForm() {
         b: formData.b,
         extra: formData.extra,
         jumbo: formData.jumbo,
+        frozen: formData.frozen,
+        mortality: formData.mortality,
         user_id: user.id
       });
 
@@ -71,14 +75,16 @@ export function ProductionForm() {
         aa: 0,
         b: 0,
         extra: 0,
-        jumbo: 0
+        jumbo: 0,
+        frozen: 0,
+        mortality: 0
       });
     } catch (err) {
       // Error handled by mutation hook
     }
   }
 
-  const total = formData.a + formData.aa + formData.b + formData.extra + formData.jumbo;
+  const total = formData.a + formData.aa + formData.b + formData.extra + formData.jumbo + formData.frozen;
 
   return (
     <Card variant="elevated" padding="lg" className="animate-slide-in-up">
@@ -135,6 +141,33 @@ export function ProductionForm() {
                 <span className="text-3xl font-bold text-primary">{total.toLocaleString()}</span>
               </div>
             </div>
+          </CardContent>
+        </div>
+
+        {/* Mortality Section */}
+        <div>
+          <CardHeader>
+            <CardTitle className="text-center">📊 Información Adicional</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <label className="text-lg font-medium w-32 text-neutral-700">MORTALIDAD:</label>
+              <Input
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={formData.mortality || ''}
+                onChange={(e) => handleEggCountChange('mortality', e.target.value)}
+                placeholder="0"
+                min="0"
+                step="1"
+                className="text-xl font-semibold text-center"
+                fullWidth
+              />
+            </div>
+            <p className="text-xs text-neutral-500 mt-2 text-center">
+              Número de gallinas muertas (no afecta el total de huevos)
+            </p>
           </CardContent>
         </div>
 

@@ -88,6 +88,8 @@ export interface ProductionFormData {
   b: number;
   extra: number;
   jumbo: number;
+  frozen: number;
+  mortality: number;
 }
 
 export function validateProductionForm(data: ProductionFormData): ValidationResult {
@@ -97,8 +99,8 @@ export function validateProductionForm(data: ProductionFormData): ValidationResu
     return barnResult;
   }
 
-  // Validate egg counts
-  const eggTypes = ['a', 'aa', 'b', 'extra', 'jumbo'] as const;
+  // Validate egg counts (including frozen)
+  const eggTypes = ['a', 'aa', 'b', 'extra', 'jumbo', 'frozen'] as const;
   for (const type of eggTypes) {
     const result = validateEggCount(data[type]);
     if (!result.isValid) {
@@ -106,8 +108,14 @@ export function validateProductionForm(data: ProductionFormData): ValidationResu
     }
   }
 
-  // Check if at least one egg type has a value > 0
-  const total = data.a + data.aa + data.b + data.extra + data.jumbo;
+  // Validate mortality (informative field, separate from egg counts)
+  const mortalityResult = validateEggCount(data.mortality);
+  if (!mortalityResult.isValid) {
+    return { isValid: false, error: `Error en MORTALIDAD: ${mortalityResult.error}` };
+  }
+
+  // Check if at least one egg type has a value > 0 (including frozen)
+  const total = data.a + data.aa + data.b + data.extra + data.jumbo + data.frozen;
   if (total === 0) {
     return { isValid: false, error: 'Debes ingresar al menos un huevo' };
   }

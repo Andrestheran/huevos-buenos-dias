@@ -135,6 +135,8 @@ export const offlineService = {
               b: record.b,
               extra: record.extra,
               jumbo: record.jumbo,
+              frozen: record.frozen,
+              mortality: record.mortality,
               user_id: record.user_id,
               synced: true
             });

@@ -50,6 +50,8 @@ export interface Database {
           b: number;
           extra: number;
           jumbo: number;
+          frozen: number;
+          mortality: number;
           total: number;
           synced: boolean;
           created_at: string;
@@ -64,6 +66,8 @@ export interface Database {
           b?: number;
           extra?: number;
           jumbo?: number;
+          frozen?: number;
+          mortality?: number;
           synced?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -77,6 +81,8 @@ export interface Database {
           b?: number;
           extra?: number;
           jumbo?: number;
+          frozen?: number;
+          mortality?: number;
           synced?: boolean;
           created_at?: string;
           updated_at?: string;
@@ -94,6 +100,8 @@ export interface Database {
           total_b: number;
           total_extra: number;
           total_jumbo: number;
+          total_frozen: number;
+          total_mortality: number;
           total_eggs: number;
         };
       };
@@ -137,6 +145,8 @@ export interface Database {
           total_b: number;
           total_extra: number;
           total_jumbo: number;
+          total_frozen: number;
+          total_mortality: number;
           record_count: number;
         }>;
       };

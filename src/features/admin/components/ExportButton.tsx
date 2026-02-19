@@ -25,6 +25,8 @@ export function ExportButton({ records }: ExportButtonProps) {
         'B',
         'EXTRA',
         'JUMBO',
+        'CONGELADO',
+        'MORTALIDAD',
         'Total'
       ];
 
@@ -38,6 +40,8 @@ export function ExportButton({ records }: ExportButtonProps) {
         record.b,
         record.extra,
         record.jumbo,
+        record.frozen,
+        record.mortality,
         record.total
       ]);
 
