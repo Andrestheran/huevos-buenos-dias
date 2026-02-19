@@ -7,29 +7,31 @@
 
 BEGIN;
 
--- Step 1: Add new columns with default values for backward compatibility
+-- Step 1: Drop views that depend on the total column
+DROP VIEW IF EXISTS public.daily_production_summary CASCADE;
+DROP VIEW IF EXISTS public.worker_performance CASCADE;
+
+-- Step 2: Add new columns with default values for backward compatibility
 ALTER TABLE public.production_records
 ADD COLUMN frozen INTEGER NOT NULL DEFAULT 0 CHECK (frozen >= 0);
 
 ALTER TABLE public.production_records
 ADD COLUMN mortality INTEGER NOT NULL DEFAULT 0 CHECK (mortality >= 0);
 
--- Step 2: Drop the old generated total column
+-- Step 3: Drop the old generated total column (now safe, no dependencies)
 ALTER TABLE public.production_records
 DROP COLUMN total;
 
--- Step 3: Recreate total column including frozen eggs
+-- Step 4: Recreate total column including frozen eggs
 ALTER TABLE public.production_records
 ADD COLUMN total INTEGER GENERATED ALWAYS AS (a + aa + b + extra + jumbo + frozen) STORED;
 
--- Step 4: Add comments for documentation
+-- Step 5: Add comments for documentation
 COMMENT ON COLUMN public.production_records.frozen IS 'Frozen eggs count (included in total production)';
 COMMENT ON COLUMN public.production_records.mortality IS 'Number of chickens that died this day (informative only, not included in egg total)';
 COMMENT ON COLUMN public.production_records.total IS 'Auto-calculated sum: a + aa + b + extra + jumbo + frozen';
 
--- Step 5: Update daily_production_summary view to include new fields
-DROP VIEW IF EXISTS public.daily_production_summary;
-
+-- Step 6: Recreate daily_production_summary view with new fields
 CREATE VIEW public.daily_production_summary AS
 SELECT
   DATE(created_at) as production_date,
@@ -49,10 +51,26 @@ ORDER BY production_date DESC, barn;
 
 COMMENT ON VIEW public.daily_production_summary IS 'Daily aggregated production statistics by barn including frozen eggs and mortality';
 
--- Grant view access
-GRANT SELECT ON public.daily_production_summary TO authenticated;
+-- Step 7: Recreate worker_performance view
+CREATE VIEW public.worker_performance AS
+SELECT
+  pr.user_id,
+  p.full_name,
+  COUNT(*) as total_submissions,
+  SUM(pr.total) as total_eggs_recorded,
+  AVG(pr.total) as avg_eggs_per_submission,
+  MAX(pr.created_at) as last_submission
+FROM public.production_records pr
+LEFT JOIN public.profiles p ON pr.user_id = p.id
+GROUP BY pr.user_id, p.full_name;
 
--- Step 6: Update get_production_stats function to include frozen and mortality
+COMMENT ON VIEW public.worker_performance IS 'Worker performance statistics including submission counts and averages';
+
+-- Step 8: Grant view access
+GRANT SELECT ON public.daily_production_summary TO authenticated;
+GRANT SELECT ON public.worker_performance TO authenticated;
+
+-- Step 9: Update get_production_stats function to include frozen and mortality
 DROP FUNCTION IF EXISTS public.get_production_stats(TIMESTAMPTZ, TIMESTAMPTZ, barn_type, UUID);
 
 CREATE FUNCTION public.get_production_stats(
